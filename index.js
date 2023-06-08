@@ -46,6 +46,14 @@ async function run() {
     // user CREATE api to receive data from client side starts
     app.post("/users", async (req, res) => {
       const user = req.body;
+      // for google signup it check is the user already registered or noet starts
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      console.log("Existing user:", existingUser);
+      if (existingUser) {
+        return res.send({ message: "This user is already exists " });
+      }
+      // for google end
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
