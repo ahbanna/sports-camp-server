@@ -30,6 +30,8 @@ async function run() {
     const InstructorCollection = client
       .db("sportsCamp")
       .collection("Instructors");
+    const userCollection = client.db("sportsCamp").collection("users");
+
     // collection end
 
     // Instructors RAED starts
@@ -40,6 +42,14 @@ async function run() {
     });
 
     // Instructors RAED end
+
+    // user CREATE api to receive data from client side starts
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+    // user CREATE api to receive data from client side end
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
