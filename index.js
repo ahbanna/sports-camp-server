@@ -323,6 +323,19 @@ async function run() {
     });
     // class READ end
 
+    // my class READ starts
+    app.get("/myclasses", async (req, res) => {
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const cursor = classCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // my class READ end
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
