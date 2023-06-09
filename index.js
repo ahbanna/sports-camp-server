@@ -246,6 +246,24 @@ async function run() {
     // });
     // make UPDATE user as admin end
 
+    // check if the user is admin or not starts
+    app.get("/users/admin/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
+
+      if (req.decoded.email !== email) {
+        res.send({ admin: false });
+      }
+
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      const result = { admin: user?.role === "admin" };
+      res.send(result);
+    });
+    // check if the user is admin or not end
+    // check if the user is instructor or not starts
+
+    // check if the user is instructor or not end
+
     // make UPDATE user role starts
     app.patch("/users/:role/:id", async (req, res) => {
       const id = req.params.id;
