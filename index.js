@@ -261,7 +261,18 @@ async function run() {
     });
     // check if the user is admin or not end
     // check if the user is instructor or not starts
+    app.get("/users/instructor/:email", verifyJWT, async (req, res) => {
+      const email = req.params.email;
 
+      if (req.decoded.email !== email) {
+        res.send({ instructor: false });
+      }
+
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      const result = { instructor: user?.role === "instructor" };
+      res.send(result);
+    });
     // check if the user is instructor or not end
 
     // make UPDATE user role starts
