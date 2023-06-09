@@ -187,7 +187,7 @@ async function run() {
       .db("sportsCamp")
       .collection("Instructors");
     const userCollection = client.db("sportsCamp").collection("users");
-
+    const classCollection = client.db("sportsCamp").collection("allclasses");
     // collection end
 
     // gererate jwt token starts
@@ -290,7 +290,7 @@ async function run() {
     });
     // make UPDATE user role ends
 
-    // // Set default role for a user
+    // // Set default role for a user start
     // app.patch("/users/default-role/:id", async (req, res) => {
     //   const id = req.params.id;
     //   const filter = { _id: new ObjectId(id) };
@@ -302,6 +302,26 @@ async function run() {
     //   const result = await userCollection.updateOne(filter, updateDoc);
     //   res.send(result);
     // });
+    // // Set default role for a user start
+
+    // class CREATE api to receive data from client side starts
+    app.post("/allclasses", async (req, res) => {
+      const newClass = req.body;
+      console.log(newClass);
+      // insert or add data to the mongodb database
+      const result = await classCollection.insertOne(newClass);
+      // send result to the client
+      res.send(result);
+    });
+    // class CREATE api to receive data from client side end
+
+    // class READ starts
+    app.get("/allclasses", async (req, res) => {
+      const cursor = classCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // class READ end
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
