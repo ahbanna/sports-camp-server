@@ -260,6 +260,7 @@ async function run() {
       res.send(result);
     });
     // check if the user is admin or not end
+
     // check if the user is instructor or not starts
     app.get("/users/instructor/:email", verifyJWT, async (req, res) => {
       const email = req.params.email;
@@ -366,6 +367,21 @@ async function run() {
       res.send(result);
     });
     // my classes UPDATE end
+
+    // make approve or denay class  starts
+    app.patch("/allclasses/:status/:id", async (req, res) => {
+      const id = req.params.id;
+      const status = req.params.status;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          status: status,
+        },
+      };
+      const result = await classCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+    // make approve or denay class ends
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
