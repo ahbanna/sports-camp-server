@@ -336,6 +336,37 @@ async function run() {
     });
     // my class READ end
 
+    // my classes UPDATE starts
+    app.get("/myclasses/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await classCollection.findOne(query);
+      res.send(result);
+    });
+    // To get current information from client side
+    app.put("/myclasses/:id", async (req, res) => {
+      const id = req.params.id;
+      //after getting data from client side, now have to send data to mongodb
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const classes = req.body;
+      const updatedclass = {
+        $set: {
+          className: classes.className,
+          classPic: classes.classPic,
+          availableSeat: classes.availableSeat,
+          price: classes.price,
+        },
+      };
+      const result = await classCollection.updateOne(
+        filter,
+        updatedclass,
+        options
+      );
+      res.send(result);
+    });
+    // my classes UPDATE end
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
