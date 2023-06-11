@@ -218,7 +218,6 @@ async function run() {
       // for google signup it check is the user already registered or noet starts
       const query = { email: user.email };
       const existingUser = await userCollection.findOne(query);
-      console.log("Existing user:", existingUser);
       if (existingUser) {
         return res.send({ message: "This user is already exists " });
       }
@@ -311,7 +310,6 @@ async function run() {
     // class CREATE api to receive data from client side starts
     app.post("/allclasses", async (req, res) => {
       const newClass = req.body;
-      console.log(newClass);
       // insert or add data to the mongodb database
       const result = await classCollection.insertOne(newClass);
       // send result to the client
@@ -329,7 +327,6 @@ async function run() {
 
     // my class READ starts
     app.get("/myclasses", async (req, res) => {
-      console.log(req.query.email);
       let query = {};
       if (req.query?.email) {
         query = { email: req.query.email };
@@ -404,7 +401,6 @@ async function run() {
     // selected class CREATE api to receive data from client side starts
     app.post("/selectedclasses", async (req, res) => {
       const newSelect = req.body;
-      console.log(newSelect);
       const result = await selectedClassCollection.insertOne(newSelect);
       res.send(result);
     });
@@ -421,6 +417,15 @@ async function run() {
       res.send(result);
     });
     // selected class RAED end
+
+    // my selected class DELETE starts
+    app.delete("/selectedclasses/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: id };
+      const result = await selectedClassCollection.deleteOne(query);
+      res.send(result);
+    });
+    // my selected class DELETE end
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
