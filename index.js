@@ -188,6 +188,9 @@ async function run() {
       .collection("Instructors");
     const userCollection = client.db("sportsCamp").collection("users");
     const classCollection = client.db("sportsCamp").collection("allclasses");
+    const selectedClassCollection = client
+      .db("sportsCamp")
+      .collection("selectedclasses");
     // collection end
 
     // gererate jwt token starts
@@ -382,6 +385,42 @@ async function run() {
       res.send(result);
     });
     // make approve or denay class ends
+
+    // Experiment for check for is it admin starts
+    // app.get("/users/admin", verifyJWT, async (req, res) => {
+    //   const email = req.params.email;
+
+    //   if (req.decoded.email !== email) {
+    //     res.send({ admin: false });
+    //   }
+
+    //   const query = { email: email };
+    //   const user = await userCollection.findOne(query);
+    //   const result = { admin: user?.role === "admin" };
+    //   res.send(result);
+    // });
+    // Experiment for check for is it admin end
+
+    // selected class CREATE api to receive data from client side starts
+    app.post("/selectedclasses", async (req, res) => {
+      const newSelect = req.body;
+      console.log(newSelect);
+      const result = await selectedClassCollection.insertOne(newSelect);
+      res.send(result);
+    });
+    // selected class CREATE api to receive data from client side end
+
+    // selected class Read starts
+    app.get("/selectedclasses", async (req, res) => {
+      let query = {};
+      if (req.query?.userEmail) {
+        query = { userEmail: req.query.userEmail };
+      }
+      const cursor = selectedClassCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // selected class RAED end
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
